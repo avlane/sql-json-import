@@ -1,0 +1,7 @@
+[
+  {"id": 1, "sku": "BK-100", "name": "Notebook A5",  "price": "4.50",  "active": true,  "tags": ["paper", "office"],     "updated": "2022-03-01T09:30:00Z"},
+  {"id": 2, "sku": "BK-200", "name": "Notebook A4",  "price": "6.25",  "active": true,  "tags": ["paper"],               "updated": "2022-03-01T09:30:00Z"},
+  {"id": 3, "sku": "PN-010", "name": "Gel pen black", "price": "1.20", "active": true,  "tags": ["writing", "office"],   "updated": "2022-03-04T16:00:00Z"},
+  {"id": 4, "sku": "PN-011", "name": "Gel pen blue",  "price": "1.20", "active": false, "tags": ["writing"],             "updated": "2022-03-04T16:00:00Z"},
+  {"id": 5, "sku": "DS-900", "name": "Desk lamp",    "price": "29.99", "active": true,  "tags": [],                      "updated": "2022-03-10T08:15:00Z"}
+]

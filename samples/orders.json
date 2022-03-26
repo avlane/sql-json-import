@@ -1,0 +1,25 @@
+[
+  {
+    "orderId": "A-1001",
+    "customer": {"id": 7, "name": "Rosa Alvarez", "email": "rosa@example.com"},
+    "placed": "2022-03-02T14:05:10",
+    "lines": [
+      {"sku": "BK-100", "qty": 3, "unitPrice": 4.5},
+      {"sku": "PN-010", "qty": 10, "unitPrice": 1.2}
+    ]
+  },
+  {
+    "orderId": "A-1002",
+    "customer": {"id": 9, "name": "Kenji Mori", "email": null},
+    "placed": "2022-03-03T09:41:00",
+    "lines": [
+      {"sku": "DS-900", "qty": 1, "unitPrice": 29.99}
+    ]
+  },
+  {
+    "orderId": "A-1003",
+    "customer": {"id": 7, "name": "Rosa Alvarez", "email": "rosa@example.com"},
+    "placed": "2022-03-07T18:22:31",
+    "lines": []
+  }
+]

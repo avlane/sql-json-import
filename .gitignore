@@ -1,0 +1,10 @@
+*.bak
+*.log
+*.mdf
+*.ldf
+*.ndf
+*.trc
+*.xel
+.vs/
+.DS_Store
+local_*.sql
