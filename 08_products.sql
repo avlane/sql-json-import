@@ -32,6 +32,10 @@ BEGIN
     WITH (id INT '$.id', sku NVARCHAR(30) '$.sku', name NVARCHAR(100) '$.name', price DECIMAL(10,2) '$.price',
           active BIT '$.active', updated NVARCHAR(40) '$.updated') AS p;
 
+    DECLARE @batch INT, @read INT = (SELECT COUNT(*) FROM #src), @upd INT, @ins INT;
+    INSERT INTO imp.ImportLog (DocId, Target, RowsRead) VALUES (@DocId, N'dbo.Products', @read);
+    SET @batch = SCOPE_IDENTITY();
+
     BEGIN TRANSACTION;
 
     UPDATE d
@@ -39,12 +43,18 @@ BEGIN
     FROM dbo.Products AS d
     JOIN #src AS s ON s.id = d.ProductId
     WHERE s.updated > d.UpdatedAt;          -- do not overwrite newer data with an older file
+    SET @upd = @@ROWCOUNT;
 
     INSERT INTO dbo.Products (ProductId, Sku, Name, Price, IsActive, Tags, UpdatedAt)
     SELECT s.id, s.sku, s.name, s.price, s.active, s.tags, s.updated
     FROM #src AS s
     WHERE NOT EXISTS (SELECT 1 FROM dbo.Products AS d WHERE d.ProductId = s.id);
+    SET @ins = @@ROWCOUNT;
 
     COMMIT TRANSACTION;
+
+    UPDATE imp.ImportLog
+    SET FinishedAt = SYSDATETIME(), RowsInserted = @ins, RowsUpdated = @upd, Status = 'ok'
+    WHERE BatchId = @batch;
 END
 GO
