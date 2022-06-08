@@ -19,11 +19,11 @@ CREATE TABLE dbo.CustomerOrder
 CREATE TABLE dbo.OrderLine
 (
     OrderNo   NVARCHAR(20) NOT NULL CONSTRAINT FK_OrderLine_Order REFERENCES dbo.CustomerOrder (OrderNo),
-    LineNo    INT NOT NULL,
+    [LineNo]  INT NOT NULL,
     Sku       NVARCHAR(30) NOT NULL,
     Qty       INT NOT NULL,
     UnitPrice DECIMAL(10,2) NOT NULL,
-    CONSTRAINT PK_OrderLine PRIMARY KEY (OrderNo, LineNo)
+    CONSTRAINT PK_OrderLine PRIMARY KEY (OrderNo, [LineNo])
 );
 GO
 
@@ -62,7 +62,7 @@ BEGIN
     WHERE NOT EXISTS (SELECT 1 FROM dbo.CustomerOrder AS o WHERE o.OrderNo = j.orderId);
 
     -- lines for the orders just inserted; array position becomes the line number
-    INSERT INTO dbo.OrderLine (OrderNo, LineNo, Sku, Qty, UnitPrice)
+    INSERT INTO dbo.OrderLine (OrderNo, [LineNo], Sku, Qty, UnitPrice)
     SELECT JSON_VALUE(ord.value, '$.orderId'), CAST(l.[key] AS INT) + 1, JSON_VALUE(l.value, '$.sku'),
            CAST(JSON_VALUE(l.value, '$.qty') AS INT), CAST(JSON_VALUE(l.value, '$.unitPrice') AS DECIMAL(10,2))
     FROM OPENJSON(@json) AS ord
