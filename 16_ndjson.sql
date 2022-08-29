@@ -25,9 +25,17 @@ BEGIN
         N'BULK INSERT #raw FROM ' + QUOTENAME(@Path, '''') + N' WITH (ROWTERMINATOR = ''0x0a'', FIELDTERMINATOR = ''0x0b'', CODEPAGE = ''65001'', TABLOCK);';
     EXEC (@sql);
 
+    -- Files saved with CRLF leave a trailing CHAR(13) on every line; ISJSON accepts it but the
+    -- stored text then differs from what was sent. Strip it.
     INSERT INTO stg.JsonLine (SourceFile, Body)
-    SELECT @Path, Body FROM #raw WHERE Body IS NOT NULL AND LEN(Body) > 0;
+    SELECT @Path, REPLACE(Body, CHAR(13), N'') FROM #raw WHERE Body IS NOT NULL AND LEN(REPLACE(Body, CHAR(13), N'')) > 0;
 
     RETURN @@ROWCOUNT;
 END
 GO
+
+-- Shred the lines
+SELECT l.SourceFile, e.event, e.[user], e.at
+FROM stg.JsonLine AS l
+CROSS APPLY OPENJSON(l.Body) WITH (event NVARCHAR(20) '$.event', [user] NVARCHAR(50) '$.user', at NVARCHAR(30) '$.at') AS e
+WHERE ISJSON(l.Body) = 1;
